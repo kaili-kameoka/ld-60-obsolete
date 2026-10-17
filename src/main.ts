@@ -3,6 +3,8 @@ import GameStateView from "./GameStateView.ts";
 import GatherWood from "./GatherWood.ts";
 import ActionsView from "./ActionsView.ts";
 import GameController from "./GameController.ts";
+import Rest from "./Rest.ts";
+import type ActionBinding from "./ActionBinding.ts";
 
 const gameState = GameState.getGameState();
 
@@ -15,8 +17,11 @@ function main() {
 
 	const gameStateView = new GameStateView();
 	const actionsView = new ActionsView();
-	const gatherWood = new GatherWood(gameState);
-	const gameController = new GameController(gameState, gatherWood, actionsView, gameStateView)
+	const actionBindings: ActionBinding[] = [
+		 {label: "Gather Wood", action: new GatherWood(gameState)},
+		{ label: "Rest", action: new Rest(gameState)}
+	];
+	const gameController = new GameController(gameState, actionsView, gameStateView, actionBindings)
 	gameController.refresh();
 	root.append(gameStateView.table, actionsView.element);
 

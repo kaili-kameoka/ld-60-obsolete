@@ -1,6 +1,7 @@
 import type GameState from "./GameState.ts";
+import type Action from "./Action.ts";
 
-export default class GatherWood {
+export default class GatherWood implements Action{
 	private readonly gameState: GameState;
 
 	constructor(gameState: GameState) {

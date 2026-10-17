@@ -1,31 +1,35 @@
 import type GameState from "./GameState.ts";
 import type ActionsView from "./ActionsView.ts";
 import type GameStateView from "./GameStateView.ts";
-import type GatherWood from "./GatherWood.ts";
 import GameStateDTO from "./GameStateDTO.ts";
+import type ActionButton from "./ActionButton.ts";
+import type ActionBinding from "./ActionBinding.ts";
+import type Action from "./Action.ts";
 
 export default class GameController {
 	private readonly gameState: GameState;
-	private readonly gatherWood: GatherWood;
-	private readonly actionsView: ActionsView
 	private readonly gameStateView: GameStateView;
+	private readonly buttons: {action: Action, button: ActionButton}[];
 
-	constructor(gameState: GameState, gatherWood: GatherWood, actionsView: ActionsView, gameStateView: GameStateView) {
+	constructor(gameState: GameState, actionsView: ActionsView, gameStateView: GameStateView, bindings: ActionBinding[]) {
 		this.gameState = gameState;
-		this.gatherWood = gatherWood;
-		this.actionsView = actionsView;
+		this.buttons = [];
 		this.gameStateView = gameStateView;
 
-		this.actionsView.onGatherWood(() => this.handleGatherWood());
+		for (const {label, action} of bindings) {
+			const button = actionsView.addButton(label, () => {
+				action.execute();
+				this.refresh();
+			});
+
+			this.buttons.push({action, button})
+		}
 	}
 
 	public refresh() {
 		this.gameStateView.render(GameStateDTO.from(this.gameState));
-		this.actionsView.setGatherWoodEnabled(this.gatherWood.canExecute());
-	}
-
-	private handleGatherWood() {
-		this.gatherWood.execute();
-		this.refresh();
+		for (const {action, button} of this.buttons) {
+			button.setEnabled(action.canExecute());
+		}
 	}
 }

@@ -53,6 +53,14 @@ export default  class GameState {
 		return this.energy >= amount;
 	}
 
+	public nextTurn() {
+		this.incrementTurn();
+		this.resetEnergy();
+	}
+
+	private resetEnergy() {
+		this.energy = this.turnStartEnergy;
+	}
 	public static getGameState() {
 		if (!GameState.gameState) {
 			GameState.gameState = new GameState();
