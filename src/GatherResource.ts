@@ -14,11 +14,17 @@ export default class GatherResource implements Action{
 		this.config = config;
 	}
 
+	private hasRequiredItem() {
+		const {requiredItem} = this.config;
+		return !requiredItem || this.gameState.items.getEntry(requiredItem).getQuantity() > 0;
+	}
+
 	public canExecute() {
-		return this.gameState.energy.hasQuantity(this.config.energyCost)
+		return this.hasRequiredItem() && this.gameState.energy.hasQuantity(this.config.energyCost)
 	}
 
 	public execute() {
+		if (!this.hasRequiredItem()) return `You need a ${this.config.requiredItem} first.`;
 		if(this.canExecute()) {
 			this.gameState.energy.decreaseQuantityBy(this.config.energyCost);
 			const increase = this.config.itemBonuses.reduce(

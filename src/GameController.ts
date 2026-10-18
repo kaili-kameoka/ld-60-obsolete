@@ -39,9 +39,9 @@ export default class GameController {
 
 
 	private logEndMessage() {
-		if (this.gameState.status !== 'Playing') {
-			this.logView.addLogEntry(`You ${this.gameState.status}.`);
-		}
+		const {status} = this.gameState;
+		if (status === 'Win') this.logView.addLogEntry('The Mainframe hums to life. You win!');
+		if (status === 'Lose') this.logView.addLogEntry('Out of time. The Mainframe was never built.');
 	}
 
 	public refresh() {

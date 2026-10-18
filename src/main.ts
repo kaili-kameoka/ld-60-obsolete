@@ -9,11 +9,12 @@ import Resource from "./Resource.ts";
 import Item from "./Item.ts";
 import BuyItem from "./BuyItem.ts";
 import LogView from "./LogView.ts";
+import {resources, items, gatherActions} from "./GameData.ts";
 
 const gameState = new GameState();
-gameState.resources.addEntry(new Resource("Wood"));
-gameState.items.addEntry(new Item("Cart", 1, [{name: "Wood", cost: 5}]));
-gameState.items.addEntry(new Item('Hut', 10, [{name: "Wood", cost: 10}]));
+for (const name of resources) gameState.resources.addEntry(new Resource(name));
+
+for (const {name, limit, cost} of items) gameState.items.addEntry(new Item(name, limit, cost));
 
 function main() {
 	const root = document.getElementById('app');
@@ -26,17 +27,14 @@ function main() {
 	const gameStateView = new GameStateView();
 	const actionsView = new ActionsView('Actions');
 	const actionBindings: ActionBinding[] = [
-		{label: "Gather Wood",
-			action: new GatherResource(gameState, 5,
-				 {resourceName: 'Wood', amount: 0, energyCost: 1, itemBonuses: [{itemName: "Cart", amount: 5}]})
-		},
-		{label: "Rest", action: new Rest(gameState)}
+		...gatherActions.map(({label, baseIncrease, config}) =>
+			 ({label, action: new GatherResource(gameState, baseIncrease, config)})),
+		{label: 'Rest', action: new Rest(gameState)},
 	];
 	const shopActionsView = new ActionsView('Shop');
-	const shopActionBindings: ActionBinding[] = [
-		{label: "Buy Cart", action: new BuyItem(gameState, 'Cart')},
-		{label: "Build Hut", action: new BuyItem(gameState, 'Hut')}
-	]
+	const shopActionBindings: ActionBinding[] = items.map(({name, verb}) =>
+		 ({label: `${verb} ${name}`, action: new BuyItem(gameState, name)}));
+
 	const gameController = new GameController(gameState, logView, gameStateView);
 	gameController.addActions(actionsView, actionBindings);
 	gameController.addActions(shopActionsView, shopActionBindings)

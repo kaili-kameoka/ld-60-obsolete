@@ -1,13 +1,14 @@
 import type GameStateDTO from "./GameStateDTO.ts";
+import type {ResourceName} from "./ResourceNames.ts";
 
 export default class GameStateView {
 	public element: HTMLDivElement;
 
-	private table: HTMLTableElement;
+	private readonly table: HTMLTableElement;
 	private currentTurnCell: HTMLTableCellElement;
 	private populationCell: HTMLTableCellElement;
 	private energyCell: HTMLTableCellElement;
-	private woodCell: HTMLTableCellElement;
+	private resourceCells: Map<ResourceName, HTMLTableCellElement>;
 
 	constructor () {
 		this.element = document.createElement('div');
@@ -17,7 +18,7 @@ export default class GameStateView {
 		this.currentTurnCell = this.addRow('Turn #: ');
 		this.populationCell = this.addRow('Population #: ');
 		this.energyCell = this.addRow('Energy');
-		this.woodCell = this.addRow('Wood');
+		this.resourceCells = new Map<ResourceName, HTMLTableCellElement>();
 		this.element.append(titleElement, this.table);
 	}
 
@@ -26,7 +27,14 @@ export default class GameStateView {
 		this.populationCell.innerHTML = `${gameStateDTO.population}`
 		const {quantity: energy, startTurnQuantity: startTurnEnergy } = gameStateDTO.energy;
 		this.energyCell.innerHTML = `${energy} / ${startTurnEnergy}`;
-		this.woodCell.innerHTML = `${gameStateDTO.resources.find(r => r.name === "Wood")?.quantity}`;
+		for (const {name, quantity} of gameStateDTO.resources) {
+			let cell = this.resourceCells.get(name);
+			if (!cell) {
+				cell = this.addRow(name);
+				this.resourceCells.set(name, cell);
+			}
+			cell.innerHTML = `${quantity}`;
+		}
 	}
 
 	private addRow(label: string) {

@@ -1,1 +1,1 @@
-export type ResourceName = "Energy" | "Wood";
+export type ResourceName = "Energy" | "Wood" | "Food" | "Metal" | "Coal" | "Power";

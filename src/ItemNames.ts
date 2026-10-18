@@ -1,1 +1,1 @@
-export type ItemNames = "Cart" | "Hut" ;
+export type ItemNames = "Cart" | "Hut" | "Farm" | "Forge" | "Steam Engine" | "Generator" | "Mainframe";
