@@ -11,7 +11,7 @@ export default class GameController {
 	private readonly gameState: GameState;
 	private readonly logView: LogView;
 	private readonly gameStateView: GameStateView;
-	private readonly buttons: {action: Action, button: ActionButton}[];
+	private readonly buttons: { action: Action, button: ActionButton }[];
 
 	constructor(gameState: GameState, logView: LogView, gameStateView: GameStateView) {
 		this.gameState = gameState;
@@ -23,8 +23,13 @@ export default class GameController {
 	public addActions(actionsView: ActionsView, bindings: ActionBinding[]) {
 		for (const {label, action} of bindings) {
 			const button = actionsView.addButton(label, () => {
-				this.logView.addLogEntry(action.execute());
+				if (this.gameState.status !== 'Playing') {
+					this.logView.addLogEntry('The game is over.');
+					return;
+				}
 
+				this.logView.addLogEntry(action.execute());
+				this.logEndMessage();
 				this.refresh();
 			});
 
@@ -32,10 +37,18 @@ export default class GameController {
 		}
 	}
 
+
+	private logEndMessage() {
+		if (this.gameState.status !== 'Playing') {
+			this.logView.addLogEntry(`You ${this.gameState.status}.`);
+		}
+	}
+
 	public refresh() {
 		this.gameStateView.render(GameStateDTO.from(this.gameState));
+		const playing = this.gameState.status === 'Playing';
 		for (const {action, button} of this.buttons) {
-			button.setEnabled(action.canExecute());
+			button.setEnabled(playing && action.canExecute());
 		}
 	}
 }

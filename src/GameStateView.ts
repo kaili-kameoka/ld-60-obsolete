@@ -22,7 +22,7 @@ export default class GameStateView {
 	}
 
 	public render(gameStateDTO: GameStateDTO) {
-		this.currentTurnCell.innerHTML = `${gameStateDTO.currentTurn}`;
+		this.currentTurnCell.innerHTML = `${gameStateDTO.currentTurn} / ${gameStateDTO.turnLimit}`;
 		this.populationCell.innerHTML = `${gameStateDTO.population}`
 		const {quantity: energy, startTurnQuantity: startTurnEnergy } = gameStateDTO.energy;
 		this.energyCell.innerHTML = `${energy} / ${startTurnEnergy}`;
