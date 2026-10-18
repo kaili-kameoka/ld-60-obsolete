@@ -1,14 +1,17 @@
 import GameState from "./GameState.ts";
 import GameStateView from "./GameStateView.ts";
-import GatherWood from "./GatherWood.ts";
+import GatherResource from "./GatherResource.ts";
 import ActionsView from "./ActionsView.ts";
 import GameController from "./GameController.ts";
 import Rest from "./Rest.ts";
 import type ActionBinding from "./ActionBinding.ts";
 import Resource from "./Resource.ts";
+import Item from "./Item.ts";
+import BuyItem from "./BuyItem.ts";
 
-const gameState = GameState.getGameState();
-gameState.addResource(new Resource("Wood"));
+const gameState = new GameState();
+gameState.resources.addEntry(new Resource("Wood"));
+gameState.items.addEntry(new Item("Cart", 1, [{name: "Wood", cost: 5}]));
 
 function main() {
 	const root = document.getElementById('app');
@@ -20,8 +23,12 @@ function main() {
 	const gameStateView = new GameStateView();
 	const actionsView = new ActionsView();
 	const actionBindings: ActionBinding[] = [
-		 {label: "Gather Wood", action: new GatherWood(gameState)},
-		{ label: "Rest", action: new Rest(gameState)}
+		{label: "Gather Wood",
+			action: new GatherResource(gameState, 5,
+				 {resourceName: 'Wood', amount: 0, energyCost: 1, itemBonuses: [{itemName: "Cart", amount: 5}]})
+		},
+		{label: "Buy Cart", action: new BuyItem(gameState, 'Cart')},
+		{label: "Rest", action: new Rest(gameState)}
 	];
 	const gameController = new GameController(gameState, actionsView, gameStateView, actionBindings)
 	gameController.refresh();

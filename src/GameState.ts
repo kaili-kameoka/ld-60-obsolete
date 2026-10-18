@@ -1,56 +1,35 @@
 import type Resource from "./Resource.ts";
 import EnergyResource from "./EnergyResource.ts";
 import type {ResourceName} from "./ResourceNames.ts";
+import NamedCollection from "./NamedCollection.ts";
+import type {ItemNames} from "./ItemNames.ts";
+import type Item from "./Item.ts";
 
 export default  class GameState {
-	private currentTurn: number;
-	private readonly energy: EnergyResource;
-	private resources: Map<ResourceName, Resource>;
+	public readonly energy: EnergyResource;
+	public readonly resources: NamedCollection<ResourceName, Resource>;
+	public readonly items: NamedCollection<ItemNames, Item>;
 
-	private static gameState: GameState | null;
+	private _currentTurn: number;
 
-	private constructor() {
-		this.currentTurn = 1;
+
+	constructor() {
+		this._currentTurn = 1;
 		this.energy = new EnergyResource();
-		this.resources = new Map<ResourceName, Resource>();
+		this.resources = new NamedCollection<ResourceName, Resource>();
+		this.items = new NamedCollection<ItemNames, Item>();
 	}
 
-	public incrementTurn() {
-		this.currentTurn++;
+	private incrementTurn() {
+		this._currentTurn++;
 	}
 
-	public getCurrentTurn() {
-		return this.currentTurn;
-	}
-
-	public getEnergy() {
-		return this.energy;
+	public get currentTurn() {
+		return this._currentTurn;
 	}
 
 	public nextTurn() {
 		this.incrementTurn();
 		this.energy.resetEnergy();
-	}
-
-	public addResource(resource: Resource) {
-		this.resources.set(resource.name, resource);
-	}
-
-	public getResourceByName(name: ResourceName) {
-		const resource = this.resources.get(name);
-		if(!resource) throw new Error("Resource not found");
-		return resource;
-	}
-
-	public getResources() {
-		return [...this.resources.values()];
-	}
-
-	public static getGameState() {
-		if (!GameState.gameState) {
-			GameState.gameState = new GameState();
-		}
-
-		return GameState.gameState;
 	}
 }

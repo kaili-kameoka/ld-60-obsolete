@@ -13,7 +13,6 @@ export default class Rest implements  Action {
 	}
 
 	public execute() {
-		console.log("Rest.execute")
 		this.gameState.nextTurn();
 	}
 }

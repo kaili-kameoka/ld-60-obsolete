@@ -17,8 +17,6 @@ export default class GameStateView {
 		this.currentTurnCell.innerHTML = `${gameStateDTO.currentTurn}`;
 		const {quantity: energy, startTurnQuantity: startTurnEnergy } = gameStateDTO.energy;
 		this.energyCell.innerHTML = `${energy} / ${startTurnEnergy}`;
-		const woodQuantity = gameStateDTO.resources.find(r => r.name === "Wood");;
-		console.log(woodQuantity);
 		this.woodCell.innerHTML = `${gameStateDTO.resources.find(r => r.name === "Wood")?.quantity}`;
 	}
 

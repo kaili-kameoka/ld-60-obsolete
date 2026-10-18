@@ -15,9 +15,9 @@ export default class GameStateDTO {
 
 	public static from(state: GameState) {
 		return new GameStateDTO(
-			 state.getCurrentTurn(),
-			 EnergyResourceDTO.from(state.getEnergy()),
-			 state.getResources().map(ResourceDTO.from)
+			 state.currentTurn,
+			 EnergyResourceDTO.from(state.energy),
+			 state.resources.getAll().map(ResourceDTO.from)
 		);
 	}
 }
