@@ -7,7 +7,7 @@ export default class GameStateView {
 	private woodCell: HTMLTableCellElement;
 
 	constructor () {
-		this.table = document.createElement('table');;
+		this.table = document.createElement('table');
 		this.currentTurnCell = this.addRow('Turn #: ');
 		this.energyCell = this.addRow('Energy');
 		this.woodCell = this.addRow('Wood');
@@ -15,8 +15,11 @@ export default class GameStateView {
 
 	public render(gameStateDTO: GameStateDTO) {
 		this.currentTurnCell.innerHTML = `${gameStateDTO.currentTurn}`;
-		this.energyCell.innerHTML = `${gameStateDTO.energy} / ${gameStateDTO.turnStartEnergy}`;
-		this.woodCell.innerHTML = `${gameStateDTO.wood}`;
+		const {quantity: energy, startTurnQuantity: startTurnEnergy } = gameStateDTO.energy;
+		this.energyCell.innerHTML = `${energy} / ${startTurnEnergy}`;
+		const woodQuantity = gameStateDTO.resources.find(r => r.name === "Wood");;
+		console.log(woodQuantity);
+		this.woodCell.innerHTML = `${gameStateDTO.resources.find(r => r.name === "Wood")?.quantity}`;
 	}
 
 	private addRow(label: string) {

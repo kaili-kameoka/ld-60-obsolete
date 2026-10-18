@@ -9,13 +9,14 @@ export default class GatherWood implements Action{
 	}
 
 	public canExecute() {
-		return this.gameState.hasEnergy(1)
+		return this.gameState.getEnergy().hasQuantity(1)
 	}
 
 	public execute() {
+		console.log(this.canExecute())
 		if(this.canExecute()) {
-			this.gameState.decreaseEnergyBy(1);
-			this.gameState.increaseWoodBy(5);
+			this.gameState.getEnergy().decreaseQuantityBy(1);
+			this.gameState.getResourceByName("Wood")?.increaseQuantityBy(5);
 		}
 	}
 }

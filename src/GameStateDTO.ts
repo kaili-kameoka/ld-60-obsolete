@@ -1,19 +1,23 @@
 import type GameState from "./GameState.ts";
+import ResourceDTO from "./ResourceDTO.ts";
+import EnergyResourceDTO from "./EnergyResourceDTO.ts";
 
 export default class GameStateDTO {
 	public readonly currentTurn: number;
-	public readonly turnStartEnergy: number
-	public readonly energy: number;
-	public readonly wood: number;
+	public readonly energy: EnergyResourceDTO
+	public readonly resources: ResourceDTO[];
 
-	private constructor(currentTurn: number, turnStartEnergy: number, energy: number, wood: number) {
+	private constructor(currentTurn: number, energy: EnergyResourceDTO, resources: ResourceDTO[]) {
 		this.currentTurn = currentTurn;
-		this.turnStartEnergy = turnStartEnergy;
 		this.energy = energy;
-		this.wood = wood;
+		this.resources = resources;
 	}
 
 	public static from(state: GameState) {
-		return new GameStateDTO(state.getCurrentTurn(), state.getStartTurnEnergy(), state.getEnergy(), state.getWood());
+		return new GameStateDTO(
+			 state.getCurrentTurn(),
+			 EnergyResourceDTO.from(state.getEnergy()),
+			 state.getResources().map(ResourceDTO.from)
+		);
 	}
 }
