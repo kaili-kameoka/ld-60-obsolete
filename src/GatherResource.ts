@@ -26,7 +26,9 @@ export default class GatherResource implements Action{
 					  total + amount * this.gameState.items.getEntry(itemName).getQuantity(),
 				 this.baseIncrease
 			);
-			this.gameState.resources.getEntry("Wood")?.increaseQuantityBy(increase);
+			this.gameState.resources.getEntry(this.config.resourceName)?.increaseQuantityBy(increase);
+			return `Gathered ${increase} ${this.config.resourceName}`
 		}
+		return `Could not gather ${this.config.resourceName} needs ${this.config.energyCost} Energy`
 	}
 }

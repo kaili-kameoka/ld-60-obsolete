@@ -1,18 +1,24 @@
 import type GameStateDTO from "./GameStateDTO.ts";
 
 export default class GameStateView {
-	public table: HTMLTableElement;
+	public element: HTMLDivElement;
+
+	private table: HTMLTableElement;
 	private currentTurnCell: HTMLTableCellElement;
 	private populationCell: HTMLTableCellElement;
 	private energyCell: HTMLTableCellElement;
 	private woodCell: HTMLTableCellElement;
 
 	constructor () {
+		this.element = document.createElement('div');
+		const titleElement = document.createElement('h2');
+		titleElement.innerHTML = 'Stats';
 		this.table = document.createElement('table');
 		this.currentTurnCell = this.addRow('Turn #: ');
 		this.populationCell = this.addRow('Population #: ');
 		this.energyCell = this.addRow('Energy');
 		this.woodCell = this.addRow('Wood');
+		this.element.append(titleElement, this.table);
 	}
 
 	public render(gameStateDTO: GameStateDTO) {

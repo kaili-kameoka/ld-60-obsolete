@@ -22,11 +22,15 @@ export default class BuyItem implements Action {
 	}
 
 	public execute() {
+		if (!this.item.canIncrement()) return `You can't have more than ${this.item.quantityLimit} ${this.item.name}(s).`;
 		if (this.canExecute()) {
 			for (const {name, cost} of this.item.cost) {
 				this.gameState.resources.getEntry(name).decreaseQuantityBy(cost);
 			}
 			this.item.incrementQuantity();
+			return `Bought ${this.item.name}`
 		}
+		const needsListString = this.item.cost.map(({name, cost}) => `${cost} ${name}`).join(', ');
+		return `Could not buy ${this.item.name} needs ${needsListString}`
 	}
 }

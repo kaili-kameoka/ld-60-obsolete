@@ -14,5 +14,6 @@ export default class Rest implements  Action {
 
 	public execute() {
 		this.gameState.nextTurn();
+		return `Resting...\n Day ${this.gameState.currentTurn} Starting...`
 	}
 }

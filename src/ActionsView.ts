@@ -3,20 +3,18 @@ import type ActionButton from "./ActionButton.ts";
 export default class ActionsView {
 	public readonly element: HTMLDivElement;
 
-	constructor() {
+	constructor(viewTitle: string) {
 		this.element = document.createElement('div')
+		const titleElement = document.createElement('h2');
+		titleElement.innerHTML = viewTitle;
+		this.element.append(titleElement);
 	}
 
 	public addButton(label: string, onClick: () => void): ActionButton {
 		const button = document.createElement('button');
 		button.type = 'button';
 		button.innerHTML = label;
-		button.onclick = () => {
-			if(button.getAttribute('aria-disabled') === 'false') {
-				onClick();
-			}
-		};
-
+		button.onclick = onClick;
 		this.element.append(button);
 
 		return {
