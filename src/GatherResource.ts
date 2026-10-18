@@ -27,11 +27,11 @@ export default class GatherResource implements Action{
 		if (!this.hasRequiredItem()) return `You need a ${this.config.requiredItem} first.`;
 		if(this.canExecute()) {
 			this.gameState.energy.decreaseQuantityBy(this.config.energyCost);
-			const increase = this.config.itemBonuses.reduce(
+			const increase = Math.max(0, this.config.itemBonuses.reduce(
 				 (total, {itemName, amount}) =>
 					  total + amount * this.gameState.items.getEntry(itemName).getQuantity(),
 				 this.baseIncrease
-			);
+			));
 			this.gameState.resources.getEntry(this.config.resourceName)?.increaseQuantityBy(increase);
 			return `Gathered ${increase} ${this.config.resourceName}`
 		}

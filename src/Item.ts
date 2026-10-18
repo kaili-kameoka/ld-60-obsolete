@@ -5,14 +5,18 @@ export default class Item {
 	public readonly name:  ItemNames;
 	public readonly quantityLimit: number;
 	public readonly cost: ItemCost;
+	public readonly requiredItem?: ItemNames;
+	public readonly message?: string;
 
 	private quantity: number;
 
-	constructor(name: ItemNames, quantityLimit: number, cost: ItemCost) {
+	constructor(name: ItemNames, quantityLimit: number, cost: ItemCost, requiredItem?: ItemNames, message?: string) {
 		this.name = name;
 		this.quantity = 0;
 		this.quantityLimit = quantityLimit;
 		this.cost = cost;
+		this.requiredItem = requiredItem;
+		this.message = message;
 	}
 
 	public incrementQuantity() {

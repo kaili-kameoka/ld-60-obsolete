@@ -14,7 +14,7 @@ import {resources, items, gatherActions} from "./GameData.ts";
 const gameState = new GameState();
 for (const name of resources) gameState.resources.addEntry(new Resource(name));
 
-for (const {name, limit, cost} of items) gameState.items.addEntry(new Item(name, limit, cost));
+for (const {name, limit, cost, requiredItem, message} of items) gameState.items.addEntry(new Item(name, limit, cost, requiredItem, message));
 
 function main() {
 	const root = document.getElementById('app');
@@ -27,9 +27,9 @@ function main() {
 	const gameStateView = new GameStateView();
 	const actionsView = new ActionsView('Actions');
 	const actionBindings: ActionBinding[] = [
+		{label: 'Rest', action: new Rest(gameState)},
 		...gatherActions.map(({label, baseIncrease, config}) =>
 			 ({label, action: new GatherResource(gameState, baseIncrease, config)})),
-		{label: 'Rest', action: new Rest(gameState)},
 	];
 	const shopActionsView = new ActionsView('Shop');
 	const shopActionBindings: ActionBinding[] = items.map(({name, verb}) =>

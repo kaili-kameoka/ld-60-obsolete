@@ -6,7 +6,7 @@ import type Item from "./Item.ts";
 export default class BuyItem implements Action {
 	private readonly gameState: GameState;
 	private readonly name: ItemNames;
-	private item: Item;
+	private readonly item: Item;
 
 	constructor(gameState: GameState, name: ItemNames) {
 		this.gameState = gameState;
@@ -14,14 +14,20 @@ export default class BuyItem implements Action {
 		this.item = this.gameState.items.getEntry(this.name);
 	}
 
+	private hasRequiredItem() {
+		const {requiredItem} = this.item;
+		return !requiredItem || this.gameState.items.getEntry(requiredItem).quantityLimit > 0;
+	}
+
 	public canExecute() {
-		if (!this.item.canIncrement()) return false;
+		if (!this.hasRequiredItem() || !this.item.canIncrement()) return false;
 		return this.item.cost.every(({name, cost}) => {
 			return this.gameState.resources.getEntry(name).hasQuantity(cost);
 		})
 	}
 
 	public execute() {
+		if (!this.hasRequiredItem()) return `You need ${this.item.requiredItem}`;
 		if (!this.item.canIncrement()) return `You can't have more than ${this.item.quantityLimit} ${this.item.name}(s).`;
 		if (this.canExecute()) {
 			for (const {name, cost} of this.item.cost) {
