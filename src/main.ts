@@ -12,6 +12,7 @@ import BuyItem from "./BuyItem.ts";
 const gameState = new GameState();
 gameState.resources.addEntry(new Resource("Wood"));
 gameState.items.addEntry(new Item("Cart", 1, [{name: "Wood", cost: 5}]));
+gameState.items.addEntry(new Item('Hut', 10, [{name: "Wood", cost: 10}]));
 
 function main() {
 	const root = document.getElementById('app');
@@ -28,6 +29,7 @@ function main() {
 				 {resourceName: 'Wood', amount: 0, energyCost: 1, itemBonuses: [{itemName: "Cart", amount: 5}]})
 		},
 		{label: "Buy Cart", action: new BuyItem(gameState, 'Cart')},
+		{label: "Build Hut", action: new BuyItem(gameState, 'Hut')},
 		{label: "Rest", action: new Rest(gameState)}
 	];
 	const gameController = new GameController(gameState, actionsView, gameStateView, actionBindings)

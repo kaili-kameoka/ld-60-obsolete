@@ -28,8 +28,13 @@ export default  class GameState {
 		return this._currentTurn;
 	}
 
+	public get population() {
+		return this.items.getEntry('Hut').getQuantity() * 2;
+	}
+
 	public nextTurn() {
 		this.incrementTurn();
+		this.energy.increaseStartTurnQuantityBy(this.population);
 		this.energy.resetEnergy();
 	}
 }
