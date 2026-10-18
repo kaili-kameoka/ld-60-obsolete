@@ -31,7 +31,7 @@ export default  class GameState {
 	}
 
 	public get status(): GameStatus {
-		if (this.items.getEntry('Mainframe').getQuantity() > 0) return 'Win';
+		if (this.items.getEntry('Data Center').getQuantity() > 0) return 'Win';
 		if (this._currentTurn > this.turnLimit) return 'Lose';
 		return 'Playing';
 	}
