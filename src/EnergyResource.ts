@@ -9,8 +9,8 @@ export default class EnergyResource extends Resource {
 		this.quantity = this.startTurnQuantity;
 	}
 
-	public increaseStartTurnQuantityBy(amount: number) {
-		this.startTurnQuantity += amount;
+	public setStartTurnQuantityBy(amount: number) {
+		this.startTurnQuantity = amount;
 	}
 
 	public resetEnergy() {
