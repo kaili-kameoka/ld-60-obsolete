@@ -14,9 +14,17 @@ export default class BuyItem implements Action {
 		this.item = this.gameState.items.getEntry(this.name);
 	}
 
+	public getDetails() {
+		return this.item.cost.map(({name, cost}) => `<span class="button__details"><span class="button__th">${name}</span><span class="button__td">${cost}</span></span>`).join('');
+	}
+
+	public isAvailable() {
+		return this.hasRequiredItem() && this.item.canIncrement();
+	}
+
 	private hasRequiredItem() {
 		const {requiredItem} = this.item;
-		return !requiredItem || this.gameState.items.getEntry(requiredItem).quantityLimit > 0;
+		return !requiredItem || this.gameState.items.getEntry(requiredItem).getQuantity() > 0;
 	}
 
 	public canExecute() {

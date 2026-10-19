@@ -1,13 +1,14 @@
 import type ActionButton from "./ActionButton.ts";
 
 export default class ActionsView {
-	public readonly element: HTMLDivElement;
+	private element: HTMLElement;
 
-	constructor(viewTitle: string) {
-		this.element = document.createElement('div')
-		const titleElement = document.createElement('h2');
-		titleElement.innerHTML = viewTitle;
-		this.element.append(titleElement);
+	constructor(elementId: string) {
+		let element = document.getElementById(elementId);
+		if (!element) {
+		element = document.createElement('div')
+		}
+		this.element = element;
 	}
 
 	public addButton(label: string, onClick: () => void): ActionButton {
@@ -19,6 +20,8 @@ export default class ActionsView {
 
 		return {
 			setEnabled: (enabled: boolean) => button.setAttribute('aria-disabled', String(!enabled)),
+			setLabel: (label: string) => button.innerHTML = label,
+			 setVisible: (visible: boolean) => button.hidden = !visible,
 		}
 	}
 }

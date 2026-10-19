@@ -11,7 +11,7 @@ export default class GameController {
 	private readonly gameState: GameState;
 	private readonly logView: LogView;
 	private readonly gameStateView: GameStateView;
-	private readonly buttons: { action: Action, button: ActionButton }[];
+	private readonly buttons: { label: string, action: Action, button: ActionButton }[];
 
 	constructor(gameState: GameState, logView: LogView, gameStateView: GameStateView) {
 		this.gameState = gameState;
@@ -33,7 +33,7 @@ export default class GameController {
 				this.refresh();
 			});
 
-			this.buttons.push({action, button})
+			this.buttons.push({label, action, button});
 		}
 	}
 
@@ -47,8 +47,11 @@ export default class GameController {
 	public refresh() {
 		this.gameStateView.render(GameStateDTO.from(this.gameState));
 		const playing = this.gameState.status === 'Playing';
-		for (const {action, button} of this.buttons) {
+		for (const {label, action, button} of this.buttons) {
 			button.setEnabled(playing && action.canExecute());
+			const detail = action.getDetails?.();
+			button.setLabel(detail ? `<span class="button__title">${label}</span>${detail}` : `<span class="button__title">${label}</span>`);
+			button.setVisible(action.isAvailable?.() ?? true);
 		}
 	}
 }

@@ -2,30 +2,28 @@ import type GameStateDTO from "./GameStateDTO.ts";
 import type {ResourceName} from "./ResourceNames.ts";
 
 export default class GameStateView {
-	public element: HTMLDivElement;
-
-	private readonly table: HTMLTableElement;
+	private readonly table: HTMLElement;
 	private currentTurnCell: HTMLTableCellElement;
 	private populationCell: HTMLTableCellElement;
 	private energyCell: HTMLTableCellElement;
 	private resourceCells: Map<ResourceName, HTMLTableCellElement>;
 
-	constructor () {
-		this.element = document.createElement('div');
-		const titleElement = document.createElement('h2');
-		titleElement.innerHTML = 'Stats';
-		this.table = document.createElement('table');
+	constructor() {
+		let table = document.getElementById('GameStateView');
+		if (!table) {
+			table = document.createElement('table');
+		}
+		this.table = table;
 		this.currentTurnCell = this.addRow('Turn #: ');
 		this.populationCell = this.addRow('Population #: ');
 		this.energyCell = this.addRow('Energy');
 		this.resourceCells = new Map<ResourceName, HTMLTableCellElement>();
-		this.element.append(titleElement, this.table);
 	}
 
 	public render(gameStateDTO: GameStateDTO) {
 		this.currentTurnCell.innerHTML = `${gameStateDTO.currentTurn} / ${gameStateDTO.turnLimit}`;
 		this.populationCell.innerHTML = `${gameStateDTO.population}`
-		const {quantity: energy, startTurnQuantity: startTurnEnergy } = gameStateDTO.energy;
+		const {quantity: energy, startTurnQuantity: startTurnEnergy} = gameStateDTO.energy;
 		this.energyCell.innerHTML = `${energy} / ${startTurnEnergy}`;
 		for (const {name, quantity} of gameStateDTO.resources) {
 			let cell = this.resourceCells.get(name);
@@ -38,11 +36,12 @@ export default class GameStateView {
 	}
 
 	private addRow(label: string) {
-		const tr = this.table.insertRow();
+		const tr = document.createElement('tr');
 		const th = document.createElement('th')
 		th.innerText = label;
 		const td = document.createElement('td');
 		tr.append(th, td);
+		this.table.append(tr);
 		return td;
 	}
 }
